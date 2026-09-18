@@ -221,8 +221,8 @@ A phase margin of $84.76^\circ$ ($> 45^\circ$ standard) demonstrates exceptional
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/muhammedkorkunc/dc-motor-pid-control.git
-cd dc-motor-pid-control
+git clone https://github.com/mustafakorkunc/control-systems-simulink.git
+cd control-systems-simulink
 ```
 
 #### 2. Set Up a Python Virtual Environment
