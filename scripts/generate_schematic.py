@@ -1,6 +1,8 @@
-﻿import os
-import matplotlib.pyplot as plt
+import os
+
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+
 
 def draw_system_schematic(save_path: str):
     fig = plt.figure(figsize=(12, 6.5), dpi=300)
@@ -125,7 +127,7 @@ def draw_system_schematic(save_path: str):
     ctrl_box = patches.FancyBboxPatch((3.0, 1.0), 2.2, 1.0, boxstyle="round,pad=0.1",
                                       facecolor='#e8f8f5', edgecolor='#16a085', lw=2)
     ax.add_patch(ctrl_box)
-    ax.text(4.1, 1.5, "PID Controller\n$C(s) = K_p + \\frac{K_i}{s} + K_d s$",
+    ax.text(4.1, 1.5, "PID Controller\n$C(s) = K_p + \\frac{K_i}{s} + \\frac{K_d s}{1+s/N}$",
             fontsize=9.5, ha='center', va='center', fontweight='bold', color='#16a085')
 
     # Control effort signal
@@ -160,6 +162,8 @@ def draw_system_schematic(save_path: str):
     print(f"Schematic successfully generated at: {save_path}")
 
 if __name__ == '__main__':
-    assets_dir = r"C:\Users\bromius\.gemini\antigravity\scratch\dc-motor-pid\assets"
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    assets_dir = os.path.join(repo_root, "assets")
     os.makedirs(assets_dir, exist_ok=True)
     draw_system_schematic(os.path.join(assets_dir, 'dc_motor_schematic.png'))
+    draw_system_schematic(os.path.join(assets_dir, 'dc_motor_schematic.svg'))

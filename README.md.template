@@ -81,16 +81,16 @@ In real industrial hardware, digital microcontrollers run at discrete intervals 
 
 ## 6. Simulation Results & Transient Analysis
 
-The step response simulation was executed comparing open-loop response, P control, PI control, tuned PID control, and non-linear saturated discrete simulation under an external load disturbance torque $\tau_L = 0.0500\,\text{N}\cdot\text{m}$ injected at $t = 2.5\,\text{s}$.
+The step response simulation was executed comparing open-loop response, P control, PI control, tuned PID control, and non-linear saturated discrete simulation under an external load disturbance torque $\tau_L = {{ load_torque }}\,\text{N}\cdot\text{m}$ injected at $t = 2.5\,\text{s}$.
 
 <p align="center">
   <img src="assets/step_response.svg" alt="DC Motor PID Speed and Position Step Response" width="100%">
 </p>
 
 ### Key Transient Findings:
-1. **Speed Tracking**: The tuned PID controller reduces the settling time to **0.2670 seconds** with **0.9111%** overshoot and a steady-state error of **0.0018**.
-2. **Disturbance Rejection**: When a load torque disturbance $\tau_L = 0.0500\,\text{N}\cdot\text{m}$ is applied at $t = 2.5\,\text{s}$, the PID integral action rapidly rejects the disturbance and restores target speed.
-3. **Position Regulation**: Position control tracking yields a settling time of **1.3010 seconds** and an overshoot of **1.8810%**.
+1. **Speed Tracking**: The tuned PID controller reduces the settling time to **{{ spd_settle }} seconds** with **{{ spd_os }}%** overshoot and a steady-state error of **{{ spd_ss_err }}**.
+2. **Disturbance Rejection**: When a load torque disturbance $\tau_L = {{ load_torque }}\,\text{N}\cdot\text{m}$ is applied at $t = 2.5\,\text{s}$, the PID integral action rapidly rejects the disturbance and restores target speed.
+3. **Position Regulation**: Position control tracking yields a settling time of **{{ pos_settle }} seconds** and an overshoot of **{{ pos_os }}%**.
 4. **Actuator Voltage Feasibility**: Control effort remains well bounded within realistic limits ($\pm 24\,\text{V}$).
 
 ---
@@ -105,8 +105,8 @@ Frequency-domain analysis of the open-loop plant $P(s)$, compensated open-loop $
 
 ### Stability Margins Summary:
 * **Gain Margin ($\mathrm{GM}$)**: Infinite dB.
-* **Phase Margin ($\mathrm{PM}$)**: **84.7641$^\circ$** at gain crossover frequency $\omega_{cp} = 20.3973\,\text{rad/s}$.
-* **Closed-Loop Bandwidth ($-3\,\text{dB}$)**: **23.3006\,\text{rad/s}**.
+* **Phase Margin ($\mathrm{PM}$)**: **{{ pm_deg }}$^\circ$** at gain crossover frequency $\omega_{cp} = {{ wcp }}\,\text{rad/s}$.
+* **Closed-Loop Bandwidth ($-3\,\text{dB}$)**: **{{ bw_spd }}\,\text{rad/s}**.
 
 ---
 
