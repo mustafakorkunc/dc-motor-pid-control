@@ -120,8 +120,8 @@ Frequency-domain analysis of the open-loop plant $P(s)$, compensated open-loop $
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/mustafakorkunc/control-systems-simulink.git
-cd control-systems-simulink
+git clone https://github.com/mustafakorkunc/dc-motor-pid-control.git
+cd dc-motor-pid-control
 ```
 
 #### 2. Set Up a Python Virtual Environment
