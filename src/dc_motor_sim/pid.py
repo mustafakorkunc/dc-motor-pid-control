@@ -59,7 +59,8 @@ class PIDController:
         # Proportional term
         p_term = self.Kp * error
 
-        # Filtered Derivative term: D[k] = (N * Ts / (1 + N * Ts)) * (Kd * (e[k] - e[k-1])/Ts) + (1 / (1 + N * Ts)) * D[k-1]
+        # Filtered Derivative term: 
+        # D[k] = (N * Ts / (1 + N * Ts)) * (Kd * (e[k] - e[k-1])/Ts) + (1 / (1 + N * Ts)) * D[k-1]
         alpha = self.N * self.Ts / (1.0 + self.N * self.Ts)
         d_raw = self.Kd * (error - self.prev_error) / self.Ts if self.Ts > 0 else 0.0
         d_term = alpha * d_raw + (1.0 - alpha) * self.prev_derivative

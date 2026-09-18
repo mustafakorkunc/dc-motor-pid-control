@@ -70,7 +70,8 @@ def plot_step_responses(
     # (b) Speed Disturbance Rejection
     ax = axs[0, 1]
     ax.plot(t_discrete, spd_history, color='#27ae60', lw=2.2, label=r'Closed-Loop Speed $\omega(t)$')
-    ax.axvline(2.5, color='#c0392b', linestyle='--', lw=1.8, label=r'Load Disturbance ($\tau_L = 0.05\ \mathrm{N\cdot m}$)')
+    label_dist = r'Load Disturbance ($\tau_L = 0.05\ \mathrm{N\cdot m}$)'
+    ax.axvline(2.5, color='#c0392b', linestyle='--', lw=1.8, label=label_dist)
     ax.axhline(1.0, color='#c0392b', linestyle=':', lw=1.6, label='Reference (1.0 rad/s)')
 
     ax.set_title(r'(b) Speed Disturbance Rejection Under Load Torque')
@@ -86,7 +87,8 @@ def plot_step_responses(
     ax.plot(t_pos_span, y_p_pos, color='#e67e22', lw=1.6, linestyle=':', label=r'P Only ($K_p=20$)')
     ax.plot(t_pos_span, y_pd_pos, color='#2980b9', lw=1.8, linestyle='--', label=r'PD ($K_p=20, K_d=8$)')
     ax.plot(t_pos_span, y_pid_pos, color='#8e44ad', lw=2.4, label=r'PID ($K_p=20, K_i=0.2, K_d=8$)')
-    ax.plot(t_discrete, pos_history, color='#2c3e50', linestyle='-.', lw=1.8, label=r'Saturated Discrete RK4 ($\pm 24\ \mathrm{V}$)')
+    label_rk4 = r'Saturated Discrete RK4 ($\pm 24\ \mathrm{V}$)'
+    ax.plot(t_discrete, pos_history, color='#2c3e50', linestyle='-.', lw=1.8, label=label_rk4)
     ax.axhline(1.0, color='#c0392b', linestyle=':', lw=1.6, label='Reference (1.0 rad)')
 
     ann_pos = (
@@ -110,7 +112,8 @@ def plot_step_responses(
     # (d) Control Effort / Voltage Input
     ax = axs[1, 1]
     ax.plot(t_discrete, u_spd_history, color='#27ae60', lw=1.8, label=r'Speed Control Voltage $V_a(t)$')
-    ax.plot(t_discrete, u_pos_history, color='#8e44ad', lw=1.8, linestyle='-.', label=r'Position Control Voltage $V_a(t)$')
+    label_pos_u = r'Position Control Voltage $V_a(t)$'
+    ax.plot(t_discrete, u_pos_history, color='#8e44ad', lw=1.8, linestyle='-.', label=label_pos_u)
     ax.axhline(24.0, color='gray', linestyle=':', lw=1.4, label=r'Voltage Limits ($\pm 24$ V)')
     ax.axhline(-24.0, color='gray', linestyle=':', lw=1.4)
     ax.set_title(r'(d) Control Effort (Armature Input Voltage $V_a$)')
@@ -140,8 +143,10 @@ def plot_bode(P_tf, L_tf, T_tf, pm, wcp, save_dir):
 
     # Magnitude
     ax_mag.semilogx(omega_vec, 20 * np.log10(mag_P), 'k--', lw=1.6, label=r'Open-Loop Plant $P(s)$', alpha=0.7)
-    ax_mag.semilogx(omega_vec, 20 * np.log10(mag_L), color='#2980b9', lw=2.2, label=r'Compensated Loop $L(s) = C(s)P(s)$')
-    ax_mag.semilogx(omega_vec, 20 * np.log10(mag_T), color='#27ae60', lw=2.0, label=r'Closed-Loop Complementary $T(s)$')
+    label_L = r'Compensated Loop $L(s) = C(s)P(s)$'
+    ax_mag.semilogx(omega_vec, 20 * np.log10(mag_L), color='#2980b9', lw=2.2, label=label_L)
+    label_T = r'Closed-Loop Complementary $T(s)$'
+    ax_mag.semilogx(omega_vec, 20 * np.log10(mag_T), color='#27ae60', lw=2.0, label=label_T)
     ax_mag.axhline(0, color='gray', linestyle=':', lw=1.2)
 
     if wcp is not None and not np.isnan(wcp):
@@ -165,8 +170,6 @@ def plot_bode(P_tf, L_tf, T_tf, pm, wcp, save_dir):
     ax_phase.axhline(-180, color='gray', linestyle=':', lw=1.2)
 
     if wcp is not None and not np.isnan(wcp):
-        idx_wcp = np.argmin(np.abs(omega_vec - wcp))
-        phi_at_wcp = phase_L_deg[idx_wcp]
         ax_phase.axvline(wcp, color='#c0392b', linestyle='--', lw=1.4)
 
     ax_phase.set_xlabel(r'Frequency $\omega$ (rad/s)')

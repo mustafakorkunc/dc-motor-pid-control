@@ -53,8 +53,13 @@ def main():
     # Continuous step responses for speed
     t_span = np.arange(0, 1.5, 0.001) # use arange instead of linspace
     _, y_ol = ct.step_response(motor.P_speed, t_span)
-    _, y_p_spd = ct.step_response(ct.feedback(ct.tf([spd_cfg.Kp], [1.0]) * motor.P_speed, 1.0), t_span)
-    _, y_pi_spd = ct.step_response(ct.feedback(ct.tf([spd_cfg.Kp, spd_cfg.Ki], [1.0, 0.0]) * motor.P_speed, 1.0), t_span)
+    
+    C_p_spd = ct.tf([spd_cfg.Kp], [1.0])
+    _, y_p_spd = ct.step_response(ct.feedback(C_p_spd * motor.P_speed, 1.0), t_span)
+    
+    C_pi_spd = ct.tf([spd_cfg.Kp, spd_cfg.Ki], [1.0, 0.0])
+    _, y_pi_spd = ct.step_response(ct.feedback(C_pi_spd * motor.P_speed, 1.0), t_span)
+    
     _, y_pid_spd = ct.step_response(T_spd_tf, t_span)
     
     metrics_pid_spd = compute_transient_metrics(t_span, y_pid_spd, sim_cfg.speed_target)

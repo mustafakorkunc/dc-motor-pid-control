@@ -25,9 +25,7 @@ nosetests.xml
 coverage.xml
 
 # Output
-assets/
-*.png
-*.svg
+# (Assets are tracked in this repository)
 
 # Project
 *.egg-info/
