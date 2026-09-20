@@ -42,12 +42,20 @@ def compute_transient_metrics(t: np.ndarray, y: np.ndarray, y_target: float) -> 
     t_peak = t[idx_peak]
 
     if y_peak > y_target:
-        overshoot = ((y_peak - y_target) / abs(y_target)) * 100.0
+        if y_target != 0.0:
+            overshoot = ((y_peak - y_target) / abs(y_target)) * 100.0
+        elif y_range != 0.0:
+            overshoot = ((y_peak - y_target) / abs(y_range)) * 100.0
+        else:
+            overshoot = 0.0
     else:
         overshoot = 0.0
 
     # Settling time (2% band around target)
-    tol = 0.02 * abs(y_target)
+    if y_target != 0.0:
+        tol = 0.02 * abs(y_target)
+    else:
+        tol = 0.02 * abs(y_range) if y_range != 0.0 else 0.0
     outside_band = np.where(np.abs(y - y_target) > tol)[0]
     if len(outside_band) == 0:
         t_settling = 0.0

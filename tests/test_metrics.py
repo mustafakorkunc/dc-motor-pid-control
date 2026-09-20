@@ -32,3 +32,39 @@ def test_compute_bandwidth():
     bw = compute_bandwidth(T_tf)
     
     np.testing.assert_almost_equal(bw, 1.0, decimal=2)
+
+def test_compute_transient_metrics_zero_target():
+    t = np.linspace(0, 10, 1000)
+
+    # y(t) = -exp(-t) * cos(3*t) goes from -1 to 0 (target is 0.0)
+    # y_initial = -1.0, y_target = 0.0, y_range = 1.0
+    y = -np.exp(-t) * np.cos(3 * t)
+
+    metrics = compute_transient_metrics(t, y, y_target=0.0)
+
+    # Peak should be greater than 0.0 (overshoot)
+    assert metrics['Peak'] > 0.0
+    # Overshoot should be computed relative to y_range (which is 1.0)
+    assert metrics['Overshoot'] > 0.0
+
+    # Steady state should be close to 0.0
+    np.testing.assert_almost_equal(metrics['SteadyStateValue'], 0.0, decimal=2)
+    assert metrics['SteadyStateError'] < 0.01
+
+    # Settling time should be a positive number (it eventually settles within 2% of range = 0.02)
+    assert metrics['SettlingTime'] > 0.0
+    assert metrics['SettlingTime'] < 10.0
+
+def test_compute_transient_metrics_zero_target_zero_range():
+    t = np.linspace(0, 10, 1000)
+
+    # y(t) = 0 for all t
+    y = np.zeros_like(t)
+
+    metrics = compute_transient_metrics(t, y, y_target=0.0)
+
+    assert metrics['Peak'] == 0.0
+    assert metrics['Overshoot'] == 0.0
+    assert metrics['SteadyStateValue'] == 0.0
+    assert metrics['SteadyStateError'] == 0.0
+    assert metrics['SettlingTime'] == 0.0
