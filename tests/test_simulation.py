@@ -36,10 +36,7 @@ def test_end_to_end_simulation():
     for k in range(time_steps):
         u_applied, _ = pid.compute_discrete_step(target, state[1])
         
-        def ode_func(t, s):
-            return motor.derivatives(t, s, u_applied, 0.0)
-            
-        state = rk4_step(ode_func, k * sim_cfg.dt, state, sim_cfg.dt)
+        state = rk4_step(motor.derivatives, k * sim_cfg.dt, state, sim_cfg.dt, u_applied, 0.0)
         
     # Since it's a P controller with Kp=10, it won't reach exactly 1.0, but should be positive and stable
     final_speed = state[1]
