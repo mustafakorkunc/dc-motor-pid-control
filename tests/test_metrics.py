@@ -32,3 +32,12 @@ def test_compute_bandwidth():
     bw = compute_bandwidth(T_tf)
     
     np.testing.assert_almost_equal(bw, 1.0, decimal=2)
+
+
+def test_compute_bandwidth_no_drop():
+    # Simple gain of 1: no 3dB drop
+    T_tf = ct.tf([1], [1])
+    bw = compute_bandwidth(T_tf)
+
+    # Assert that bandwidth is NaN
+    assert np.isnan(bw)
