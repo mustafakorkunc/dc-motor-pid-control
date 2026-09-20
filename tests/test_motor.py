@@ -42,3 +42,32 @@ def test_derivatives():
     # di_a_dt = (v_applied - R * i_a - K * omega) / L
     expected_di = (5.0 - 1.0 * 2.0 - 0.01 * 1.0) / 0.5
     np.testing.assert_almost_equal(derivs[2], expected_di)
+
+
+def test_get_poles_and_zeros():
+    params = DCMotorParameters(J=0.01, b=0.1, K=0.01, R=1.0, L=0.5)
+    model = DCMotorModel(params)
+
+    res = model.get_poles_and_zeros()
+
+    assert "poles" in res
+    assert "zeros" in res
+    assert "dc_gain" in res
+    assert "wn" in res
+    assert "zeta" in res
+
+    # Mathematical expectations for J=0.01, b=0.1, K=0.01, R=1.0, L=0.5
+    # den = [J*L, J*R + b*L, b*R + K**2] = [0.005, 0.06, 0.1001]
+    expected_wn = np.sqrt(0.1001 / 0.005)
+    expected_zeta = (0.06 / 0.005) / (2.0 * expected_wn)
+    expected_dc_gain = 0.01 / 0.1001
+
+    np.testing.assert_almost_equal(res["wn"], expected_wn)
+    np.testing.assert_almost_equal(res["zeta"], expected_zeta)
+    np.testing.assert_almost_equal(res["dc_gain"], expected_dc_gain)
+
+    assert len(res["poles"]) == 2
+    assert len(res["zeros"]) == 0
+
+    expected_poles = np.roots([0.005, 0.06, 0.1001])
+    np.testing.assert_almost_equal(np.sort(res["poles"]), np.sort(expected_poles))
