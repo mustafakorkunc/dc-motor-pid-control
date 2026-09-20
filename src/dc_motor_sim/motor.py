@@ -14,8 +14,20 @@ class DCMotorModel:
 
     def __init__(self, params: DCMotorParameters | None = None):
         self.params = params or DCMotorParameters()
+        self._precompute_constants()
         self._build_transfer_functions()
         self._build_state_space()
+
+    def _precompute_constants(self):
+        """Precomputes reciprocal constants to optimize hot derivatives calculation."""
+        self._inv_J = 1.0 / self.params.J
+        self._inv_L = 1.0 / self.params.L
+
+        self._K_inv_J = self.params.K * self._inv_J
+        self._b_inv_J = self.params.b * self._inv_J
+
+        self._R_inv_L = self.params.R * self._inv_L
+        self._K_inv_L = self.params.K * self._inv_L
 
     def _build_transfer_functions(self):
         """Constructs open-loop transfer functions for speed and position."""
@@ -94,17 +106,10 @@ class DCMotorModel:
         Continuous-time linear dynamic differential equations.
         state = [theta, omega, i_a]
         """
-        theta, omega, i_a = state
-        J, b, K, R, L = (
-            self.params.J,
-            self.params.b,
-            self.params.K,
-            self.params.R,
-            self.params.L
-        )
+        omega = state[1]
+        i_a = state[2]
 
-        dtheta_dt = omega
-        domega_dt = (K * i_a - b * omega - tau_load) / J
-        di_a_dt = (v_applied - R * i_a - K * omega) / L
+        domega_dt = self._K_inv_J * i_a - self._b_inv_J * omega - tau_load * self._inv_J
+        di_a_dt = v_applied * self._inv_L - self._R_inv_L * i_a - self._K_inv_L * omega
 
-        return np.array([dtheta_dt, domega_dt, di_a_dt])
+        return np.array([omega, domega_dt, di_a_dt])
