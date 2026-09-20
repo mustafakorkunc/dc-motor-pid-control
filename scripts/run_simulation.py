@@ -85,10 +85,7 @@ def main():
         u_applied, _ = pid_spd.compute_discrete_step(sim_cfg.speed_target, omega_curr)
         u_spd_history[k] = u_applied
         
-        def ode_func_spd(t, s):
-            return motor.derivatives(t, s, u_applied, tau_load_spd[k])
-            
-        state_spd = rk4_step(ode_func_spd, t_discrete[k], state_spd, sim_cfg.dt)
+        state_spd = rk4_step(motor.derivatives, t_discrete[k], state_spd, sim_cfg.dt, u_applied, tau_load_spd[k])
         # Apply current limits if needed
         state_spd[2] = np.clip(state_spd[2], -sim_cfg.max_current, sim_cfg.max_current)
         
@@ -124,10 +121,7 @@ def main():
         u_applied, _ = pid_pos.compute_discrete_step(sim_cfg.pos_target, theta_curr)
         u_pos_history[k] = u_applied
         
-        def ode_func_pos(t, s):
-            return motor.derivatives(t, s, u_applied, tau_load_pos[k])
-            
-        state_pos = rk4_step(ode_func_pos, t_discrete[k], state_pos, sim_cfg.dt)
+        state_pos = rk4_step(motor.derivatives, t_discrete[k], state_pos, sim_cfg.dt, u_applied, tau_load_pos[k])
         state_pos[2] = np.clip(state_pos[2], -sim_cfg.max_current, sim_cfg.max_current)
 
     # --- Plotting ---
